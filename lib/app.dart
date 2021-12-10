@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo/screens/home/home_screen.dart';
+import 'package:todo/route.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -13,7 +13,8 @@ class App extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: const HomeScreen(),
+      initialRoute: RouteApp.home,
+      routes: RouteApp.getRoutes(context),
     );
   }
 }
