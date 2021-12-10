@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FormTodoScreen extends StatelessWidget {
-  final GlobalKey _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   FormTodoScreen({Key? key}) : super(key: key);
 
@@ -17,40 +17,41 @@ class FormTodoScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          height: 20,
-          color: Colors.blue,
-        ),
-        Center(
-          child: Column(
-            children: [
-              Container(
-                width: 350,
-                height: 320,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0.5,
-                      blurRadius: 6,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: _buildForm(context),
-              ),
-            ],
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          Container(
+            height: 20,
+            color: Colors.blue,
           ),
-        ),
-      ],
+          Center(
+            child: Column(
+              children: [
+                Container(
+                  width: 350,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 0.5,
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: _buildForm(context),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -69,17 +70,39 @@ class FormTodoScreen extends StatelessWidget {
               labelText: 'Título da tarefa',
               border: OutlineInputBorder(),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Informe o título da tarefa';
+              }
+            },
+            onSaved: (value) {
+              print(value);
+            },
           ),
           const SizedBox(height: 16),
           TextFormField(
             decoration: const InputDecoration(
-              labelText: 'Título da tarefa',
+              labelText: 'Descrição da tarefa',
               border: OutlineInputBorder(),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Informe a descrição da tarefa';
+              }
+            },
+            onSaved: (value) {
+              print(value);
+            },
           ),
           const SizedBox(height: 32),
           ElevatedButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              final bool isValidate = _formKey.currentState!.validate();
+              if (isValidate) {
+                _formKey.currentState!.save();
+                Navigator.pop(context);
+              }
+            },
             child: const Text('Salvar'),
           ),
         ],
