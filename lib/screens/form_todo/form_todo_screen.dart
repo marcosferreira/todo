@@ -12,11 +12,11 @@ class FormTodoScreen extends StatelessWidget {
         title: const Text('Nova tarefa'),
         centerTitle: true,
       ),
-      body: _buildFormToDo(context),
+      body: _buildBody(context),
     );
   }
 
-  Widget _buildFormToDo(BuildContext context) {
+  Widget _buildBody(BuildContext context) {
     return Stack(
       children: [
         Container(
@@ -29,8 +29,10 @@ class FormTodoScreen extends StatelessWidget {
               Container(
                 width: 350,
                 height: 320,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.white,
@@ -43,41 +45,45 @@ class FormTodoScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Text(
-                        'Adicionar nova tarefa',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                      const SizedBox(height: 32),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Título da tarefa',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Título da tarefa',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Salvar'),
-                      ),
-                    ],
-                  ),
-                ),
+                child: _buildForm(context),
               ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Form _buildForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Text(
+            'Adicionar nova tarefa',
+            style: Theme.of(context).textTheme.headline5,
+          ),
+          const SizedBox(height: 32),
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Título da tarefa',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Título da tarefa',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 32),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Salvar'),
+          ),
+        ],
+      ),
     );
   }
 }
