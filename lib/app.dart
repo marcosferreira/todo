@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/provider/todo_provider.dart';
 import 'package:todo/route.dart';
 
 class App extends StatelessWidget {
@@ -6,15 +8,22 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => TodoProvider(),
+        )
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            elevation: 0,
+          ),
         ),
+        initialRoute: RouteApp.home,
+        routes: RouteApp.getRoutes(context),
       ),
-      initialRoute: RouteApp.home,
-      routes: RouteApp.getRoutes(context),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo/models/todo.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/provider/todo_provider.dart';
 import 'package:todo/route.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,11 +11,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<ToDo> listItens = listTodo;
   bool listCheck = false;
 
   @override
   Widget build(BuildContext context) {
+    TodoProvider toDoItems = Provider.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de tarefas'),
@@ -28,11 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: _buildBody(),
+      body: _buildBody(toDoItems),
     );
   }
 
-  Stack _buildBody() {
+  Stack _buildBody(TodoProvider toDoItems) {
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -42,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         ListView.builder(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          itemCount: listItens.length,
+          itemCount: toDoItems.count,
           itemBuilder: (BuildContext context, int index) {
             return Container(
               width: 350,
@@ -61,32 +63,59 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               child: ListTile(
+                onTap: () {
+                  setState(() {
+                    toDoItems.byIndex(index).check =
+                        !toDoItems.byIndex(index).check;
+                  });
+                },
+                leading: toDoItems.byIndex(index).check
+                    ? const Icon(Icons.check_box)
+                    : const Icon(Icons.check_box_outline_blank),
                 title: Text(
-                  listItens[index].name,
+                  toDoItems.byIndex(index).name!,
                   style: TextStyle(
-                    decoration: listItens[index].check
+                    decoration: toDoItems.byIndex(index).check
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
                   ),
                 ),
                 subtitle: Text(
-                  listItens[index].descrption,
+                  '${toDoItems.byIndex(index).descrption} ${toDoItems.byIndex(index).id}',
                   style: TextStyle(
-                    decoration: listItens[index].check
+                    decoration: toDoItems.byIndex(index).check
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
                   ),
                 ),
-                trailing: IconButton(
-                  color: Colors.blue,
-                  onPressed: () {
-                    setState(() {
-                      listItens[index].check = !listItens[index].check;
-                    });
-                  },
-                  icon: listItens[index].check
-                      ? const Icon(Icons.check_box)
-                      : const Icon(Icons.check_box_outline_blank),
+                trailing: SizedBox(
+                  width: 100,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        color: Colors.blue,
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            RouteApp.formTodo,
+                            arguments: toDoItems.byIndex(index),
+                          );
+                        },
+                        icon: const Icon(Icons.edit_outlined),
+                        // icon: toDoItems.byIndex(index).check
+                        //     ? const Icon(Icons.check_box)
+                        //     : const Icon(Icons.check_box_outline_blank),
+                      ),
+                      IconButton(
+                        color: Colors.red,
+                        onPressed: () {
+                          toDoItems.distroy(toDoItems.byIndex(index));
+                        },
+                        icon: const Icon(Icons.delete_outline),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
